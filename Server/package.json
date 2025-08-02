@@ -10,14 +10,20 @@
   },
   "author": "Abhay Dubey",
   "license": "MIT",
-  "keywords": ["express", "mongodb", "splitwise", "backend", "api"],
+  "keywords": [
+    "express",
+    "mongodb",
+    "splitwise",
+    "backend",
+    "api"
+  ],
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
-    "cloudinary": "2.5.1",
+    "cloudinary": "1.41.3",
     "connect-mongo": "5.1.0",
     "cookie-parser": "1.4.7",
     "cookie-session": "2.1.0",
