@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@keyframes moveBackground {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  100% {
+    transform: translateY(-20px) translateX(-20px);
+  }
+}
+
+
+@keyframes fadeInSlide {
+  0% {
+    opacity: 1;
+    transform: translateX(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+@media (max-width: 1250px) {
+  .custom-red-bg {
+    background-color: #fecaca; /* bg-red-200 */
+  }
+}
