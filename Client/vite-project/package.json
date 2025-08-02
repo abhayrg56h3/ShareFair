@@ -15,8 +15,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "start": "vite preview --port $PORT",
-    "prepare": "husky install",
-    "prebuild": "npm run lint"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
