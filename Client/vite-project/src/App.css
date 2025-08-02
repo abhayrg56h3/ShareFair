@@ -1,4 +1,4 @@
-@import "tailwindcss";
+
 @keyframes moveBackground {
   0% {
     transform: translateY(0) translateX(0);
