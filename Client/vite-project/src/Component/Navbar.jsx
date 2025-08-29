@@ -53,16 +53,8 @@ export default function Navbar() {
     <nav className='h-16 z-50 fixed w-full bg-gradient-to-r from-indigo-700 via-purple-700 to-purple-800 backdrop-blur-sm text-white shadow-2xl border-b border-white/10'>
       <div className='h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between'>
         
-        {/* Mobile Menu Button */}
-        <div className='lg:hidden'>
-          <button 
-            onClick={() => setMenuBar(!menuBar)}
-            className='group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/20'
-            aria-label="Toggle menu"
-          >
-            <MenuIcon className='w-6 h-6 group-hover:scale-110 transition-transform duration-200' />
-          </button> 
-        </div>
+       
+        
 
         {/* Logo */}
         <div 

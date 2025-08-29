@@ -442,9 +442,9 @@ export default function Home() {
   return (
     <div className=" px-[15px] py-[80px] z-0  h-screen relative flex ">
       {/* Left Section */}
-    <div
-  className={`flex-1 pr-5 border-r lg:flex-none lg:w-80 ${(addExpense || addFriend || showSettle) && "opacity-10"} border-gray-200`}
->
+      <div
+        className={`flex-1 pr-5 border-r lg:flex-none lg:w-80 ${(addExpense || addFriend || showSettle) && "opacity-10"} border-gray-200`}
+      >
         <div className="flex flex-col gap-8">
           {/* Header */}
           <div className="flex flex-col gap-2">

@@ -36,14 +36,13 @@ function App() {
         <Router>
         {currUser && <Navbar/>}   
           <Routes>
-            <Route path="/" element={<Home/>} />
-          {/* <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
             <Route path="/" element={currUser?<Home/>:<Register/>}/>
             <Route path="/dashboard" element={currUser?<Dashboard />:<Navigate to="/register" />} />
             <Route path="/profile" element={currUser?<Profile currUser={currUser} />:<Navigate to="/register" />} />
             <Route path="/creategroup" element={currUser?<CreateGroup />:<Navigate to="/register" />} />
               <Route path="/forgot" element={<ForgotPassword />} />
-                    <Route path="/reset/:token" element={<Reset />} /> */}
+                    <Route path="/reset/:token" element={<Reset />} />
           </Routes>
         </Router>
 
