@@ -161,15 +161,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// 🧾 Serve frontend (if production)
-if (isProduction) {
-  const frontendPath = path.resolve(__dirname, "../client/dist"); // Vite default
-  app.use(express.static(frontendPath));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-}
 
 // 🚀 Start Server
 const PORT = process.env.PORT || 5000;
