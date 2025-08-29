@@ -1,9 +1,15 @@
 # netlify.toml
 [build]
   base    = "Client/vite-project"
-  publish = "dist"
+  publish = "Client/vite-project/dist"
   command = "npm run build"
 
 [dev]
   command = "npm run dev"
   port = 5173
+
+# Redirects for SPA (React / Vite Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
