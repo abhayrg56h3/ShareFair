@@ -38,9 +38,8 @@ function App() {
           <Routes>
           <Route path="/register" element={<Register />} />
             <Route path="/" element={currUser?<Home/>:<Register/>}/>
-            <Route path="/dashboard" element={currUser?<Dashboard />:<Navigate to="/register" />} />
-            <Route path="/profile" element={currUser?<Profile currUser={currUser} />:<Navigate to="/register" />} />
-            <Route path="/creategroup" element={currUser?<CreateGroup />:<Navigate to="/register" />} />
+            <Route path="/profile" element={currUser?<Profile currUser={currUser} />:<Register />} />
+            <Route path="/creategroup" element={currUser?<CreateGroup />:<Register />} />
               <Route path="/forgot" element={<ForgotPassword />} />
                     <Route path="/reset/:token" element={<Reset />} />
           </Routes>
