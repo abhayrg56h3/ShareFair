@@ -234,7 +234,7 @@ export default function Recent({ currUserTotalExpenses, emailOfPaidBy,currUserSe
   // }, [recentActivity]);
 
   return (
-    <div className="max-w-4xl  relative mx-auto p-6 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div className="max-w-4xl  relative  p-6 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
       {/* Header */}
       <div className="mb-8 flex items-center   gap-4">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">

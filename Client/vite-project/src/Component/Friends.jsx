@@ -323,7 +323,7 @@ export default function Friends({
   let friendIndex = 0;
   let currUserIndex = 0;
   return (
-    <div className="max-w-3xl mx-auto bottom-0   p-4 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div className="max-w-3xl bottom-0   p-4 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
       <div className="absolute top-40 left-4 right-4 z-20">
         {showSettle && (
           <SettleUp

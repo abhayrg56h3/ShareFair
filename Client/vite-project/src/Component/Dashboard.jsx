@@ -503,7 +503,7 @@ export default function Dashboard({
 
 
 
-<div className="max-w-4xl mx-auto px-2 sm:px-4 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+<div className="max-w-4xl  px-2 sm:px-4 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
       {/* Top Section */}
       <div className="bg-white rounded-2xl shadow-lg p-3 sm:p-6 mb-4 sm:mb-6 border border-slate-200/50 backdrop-blur-sm">
         {/* Balance Cards */}

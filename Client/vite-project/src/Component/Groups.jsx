@@ -360,7 +360,7 @@ export default function Groups({
 
     
     <div
-      className={`max-w-3xl mx-auto relative   p-4 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen `}
+      className={`max-w-3xl relative   p-4 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen `}
     >
       {expenses.length === 0 ? (
         <div className={`text-center py-12 `}>

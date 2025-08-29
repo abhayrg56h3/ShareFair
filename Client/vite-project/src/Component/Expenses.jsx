@@ -93,7 +93,7 @@ export default function Expenses({
   function handleClick(expense) {}
 
   return (
-    <div className="max-w-3xl mx-auto  p-4 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div className="max-w-3xl   p-4 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
       {currUserTotalExpenses?.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-4xl mb-4 text-gray-300">📭</div>

@@ -60,7 +60,7 @@ export default function Home() {
   const { friendDependency, setFriendDependency } = useContext(myContext);
   const [resetDone, setResetDone] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const {visible,setVisible}=useContext(myContext);
+  const { visible, setVisible } = useContext(myContext);
   const CheckCircleIcon = ({ className }) => (
     <svg className={className} fill="currentColor" viewBox="0 0 20 20">
       <path
@@ -110,7 +110,7 @@ export default function Home() {
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/settle/fetch`, {
           email: currUser.email,
         });
-       
+
         // console.log("Settled Expenses:", res.data); // ✅ Debugging output
 
         setCurrUserSettledExpenses(res.data);
@@ -442,11 +442,9 @@ export default function Home() {
   return (
     <div className=" px-[15px] py-[80px] z-0  h-screen relative flex ">
       {/* Left Section */}
-      <div
-        className={`flex-1 pr-5  border-r    lg:block  ${
-          (addExpense || addFriend || showSettle) && "opacity-10"
-        } border-gray-200`}
-      >
+    <div
+  className={`flex-1 pr-5 border-r lg:flex-none lg:w-80 ${(addExpense || addFriend || showSettle) && "opacity-10"} border-gray-200`}
+>
         <div className="flex flex-col gap-8">
           {/* Header */}
           <div className="flex flex-col gap-2">
@@ -484,7 +482,7 @@ export default function Home() {
             <div className="flex justify-between items-center pb-2 border-b border-gray-200">
               <h3
                 className="font-semibold !text-[15px] flex items-center gap-2"
-                
+
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -580,10 +578,10 @@ export default function Home() {
                   />
                 </svg>
                 <span>Friends</span>
-                
+
               </h3>
               <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                {currUser.friends.length}
+                {currUser?.friends.length}
               </span>
             </div>
             <ul className="space-y-3">
@@ -624,10 +622,9 @@ export default function Home() {
 
       {/* Center Section */}
 
-      <div 
-        className={`lg:flex-3 h-[100%] w-full ${
-          (addExpense || addFriend || showSettle) && "opacity-10"
-        }`}
+      <div
+        className={`lg:flex-3 h-[100%] w-full ${(addExpense || addFriend || showSettle) && "opacity-10"
+          }`}
       >
         {/* Header */}
 
@@ -639,17 +636,17 @@ export default function Home() {
           <div className={`flex space-x-3 pr-9 pl-2 items-center justify-between mb-6`}>
             <h1
               className="!text-[20px] font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
-              // onClick={() => setAddExpense(true)}
+            // onClick={() => setAddExpense(true)}
             >
               {currGroup
                 ? currGroup.name
                 : dashBoard
-                ? "DashBoard"
-                : expenses
-                ? "All Expenses"
-                : currFriend
-                ? currFriend.name
-                : ""}
+                  ? "DashBoard"
+                  : expenses
+                    ? "All Expenses"
+                    : currFriend
+                      ? currFriend.name
+                      : ""}
             </h1>
 
             {!dashBoard && !expenses && (
@@ -673,36 +670,36 @@ export default function Home() {
                 )}
                 {currGroup && (
 
-                   <div className="flex items-center gap-2"> 
-                   {isChatOpen ? <button
-                    onClick={() => setIsChatOpen(false)}
-                    className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
-                  >
-                    
-                    
-                    <Chat className="hidden text-sm" />
-                    <span className="text-[10px]">Close Chat</span>
-                  </button>:<button
-                    onClick={() => setIsChatOpen(true)}
-                    className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
-                  >
-                    
-                     
-                    <Chat className="hidden text-sm" />
-                    <span className="text-[10px]">Open Chat</span>
-                  </button>}
-                    
-                    
+                  <div className="flex items-center gap-2">
+                    {isChatOpen ? <button
+                      onClick={() => setIsChatOpen(false)}
+                      className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
+                    >
+
+
+                      <Chat className="hidden text-sm" />
+                      <span className="text-[10px]">Close Chat</span>
+                    </button> : <button
+                      onClick={() => setIsChatOpen(true)}
+                      className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
+                    >
+
+
+                      <Chat className="hidden text-sm" />
+                      <span className="text-[10px]">Open Chat</span>
+                    </button>}
+
+
                     <button
-                    onClick={() => setShowSettle(1)}
-                    className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
-                  >
-                    
-                    
-                    <FaHandshake className="hidden text-sm" />
-                    <span className="text-[10px]">Settle Up</span>
-                  </button></div>
-                  
+                      onClick={() => setShowSettle(1)}
+                      className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
+                    >
+
+
+                      <FaHandshake className="hidden text-sm" />
+                      <span className="text-[10px]">Settle Up</span>
+                    </button></div>
+
 
                 )}
                 {currFriend && (
@@ -782,10 +779,9 @@ export default function Home() {
       {/* Right Section */}
 
       <div
-        className={`flex-1 ${
-          (addExpense || addFriend || showSettle) &&
+        className={`flex-1 ${(addExpense || addFriend || showSettle) &&
           "opacity-10 backdrop-blur-2xl "
-        }`}
+          }`}
       >
         {currFriend && (
           <div className="max-w-md  p-6 bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
@@ -897,16 +893,14 @@ export default function Home() {
                       </span>
                       <div className="flex justify-between items-center mt-0.5">
                         <span
-                          className={`text-[10px] font-medium ${
-                            totalMoney < 0 ? "text-red-600" : "text-green-600"
-                          }`}
+                          className={`text-[10px] font-medium ${totalMoney < 0 ? "text-red-600" : "text-green-600"
+                            }`}
                         >
                           {totalMoney < 0 ? "owes" : "gets back"}
                         </span>
                         <span
-                          className={`text-[15px] font-semibold ${
-                            totalMoney < 0 ? "text-red-600" : "text-green-600"
-                          }`}
+                          className={`text-[15px] font-semibold ${totalMoney < 0 ? "text-red-600" : "text-green-600"
+                            }`}
                         >
                           ₹{Math.abs(totalMoney).toFixed(2)}
                         </span>
