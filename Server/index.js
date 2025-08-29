@@ -29,6 +29,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set("trust proxy", 1);
 const server = http.createServer(app);
 
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
@@ -43,11 +44,6 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-
-// 🧩 Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 // 🛡️ Production CORS
 app.use(
   cors({
@@ -56,6 +52,12 @@ app.use(
     credentials: true,
   })
 );
+
+// 🧩 Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.use(
   session({
     secret: JWT_SECRET,
@@ -72,7 +74,7 @@ app.use(
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
       sameSite: "none",
-      secure: isProduction, // ⚠️ Secure only in production (HTTPS)
+      secure: true, // ⚠️ Secure only in production (HTTPS)
     },
   })
 );
