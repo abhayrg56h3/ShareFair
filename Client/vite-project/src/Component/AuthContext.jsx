@@ -16,7 +16,7 @@ export default function AuthContext({children}) {
     const [visible,setVisible]=useState(false);
     const [lightMode,setLightMode]=useState(true);
      const [menuBar, setMenuBar] = useState(false);
-     const [loading,setLoading]=useState(false);
+     const [loading,setLoading]=useState(true);
     useEffect(() => {
       const savedFriend = sessionStorage.getItem("currFriend");
       const savedGroup = sessionStorage.getItem("currGroup");
