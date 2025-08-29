@@ -70,7 +70,7 @@ export default function AuthContext({children}) {
     },[]);
   return (
 
-       <myContext.Provider value={{menuBar,setMenuBar,visible,setVisible,friendDependency,setFriendDependency,dashBoard,currFriend,friendKey,isAuthLoading,setFriendKey,groupKey,setGroupKey, setCurrFriend,currGroup,setCurrGroup,setDashBoard,expenses,setExpenses,recent,setRecent,currUser,setCurrUser,lightMode,setLightMode}}>
+       <myContext.Provider value={{menuBar,loading,setMenuBar,visible,setVisible,friendDependency,setFriendDependency,dashBoard,currFriend,friendKey,isAuthLoading,setFriendKey,groupKey,setGroupKey, setCurrFriend,currGroup,setCurrGroup,setDashBoard,expenses,setExpenses,recent,setRecent,currUser,setCurrUser,lightMode,setLightMode}}>
 {children}
        </myContext.Provider>
   
