@@ -48,7 +48,14 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+// 🛡️ Production CORS
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(
   session({
     secret: JWT_SECRET,
@@ -73,14 +80,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 🛡️ Production CORS
-app.use(
-  cors({
-    origin: CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+
 
 // 🔐 Security Headers (Helmet-like, optional enhancement)
 app.disable("x-powered-by");
