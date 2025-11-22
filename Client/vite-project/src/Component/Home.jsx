@@ -26,7 +26,7 @@ import { Chat } from "@mui/icons-material";
 import { use } from "react";
 import useEnhancedEffect from "@mui/material/utils/useEnhancedEffect";
 import Settle from "../../../../Server/Models/Settle";
-// import { isNullOrUndef } from "chart.js/dist/helpers/helpers.core";
+
 export default function Home() {
   const [addFriend, setAddFriend] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -61,6 +61,7 @@ export default function Home() {
   const [resetDone, setResetDone] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { visible, setVisible } = useContext(myContext);
+
   const CheckCircleIcon = ({ className }) => (
     <svg className={className} fill="currentColor" viewBox="0 0 20 20">
       <path
@@ -100,6 +101,7 @@ export default function Home() {
       />
     </svg>
   );
+
   useEffect(() => {
     if (!currUser) {
       return;
@@ -107,15 +109,16 @@ export default function Home() {
 
     async function fetchSettledExpenses() {
       try {
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/settle/fetch`, {
-          email: currUser.email,
-        });
-
-        // console.log("Settled Expenses:", res.data); // ✅ Debugging output
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_URL}/settle/fetch`,
+          {
+            email: currUser.email,
+          }
+        );
 
         setCurrUserSettledExpenses(res.data);
       } catch (err) {
-        console.error("Error fetching settled expenses:", err); // ✅ Proper error logging
+        console.error("Error fetching settled expenses:", err);
       }
     }
 
@@ -131,9 +134,10 @@ export default function Home() {
         const res = await Promise.all(
           currUserTotalExpenses.map(async function (expense) {
             const r = await axios.get(
-              `${import.meta.env.VITE_API_URL}/user/idtoemail/${expense.paidBy}`
+              `${import.meta.env.VITE_API_URL}/user/idtoemail/${
+                expense.paidBy
+              }`
             );
-            //  console.log("udefu3g3yu4gf3ygohgfv4rou24gf8y3rguyqerfvugryv80y42",r.data.email);
             return r.data;
           })
         );
@@ -147,7 +151,7 @@ export default function Home() {
   }, [currUserTotalExpenses, friendKey, groupKey]);
   useEffect(() => {
     const fetchFriendName = async () => {
-      if (!currUser || !currUser.friends) return; // Prevent errors if currUser is undefined
+      if (!currUser || !currUser.friends) return;
 
       try {
         const dosts = await Promise.all(
@@ -158,7 +162,7 @@ export default function Home() {
             return response.data;
           })
         );
-        setFriends(dosts); // Update state properly
+        setFriends(dosts);
       } catch (err) {
         console.error("Error fetching friend names:", err);
       }
@@ -213,31 +217,20 @@ export default function Home() {
     fetchId();
   }, [currGroup, groupKey]);
 
-  // fetch currUser's all expenses
-
   useEffect(() => {
     if (!emailOfPaidBy) {
       return;
     }
-
-    // console.log("udefu3g3yu4gf3ygohgfv4rou24gf8y3rguyqerfvugryv80y42",emailOfPaidBy);
     async function fetchExpenses() {
       if (!currUser || !currUserSettledExpenses) {
         return;
       }
-
-      // console.log("Bosda",currUserSettledExpenses);
       try {
         const expenses = await axios.post(
           `${import.meta.env.VITE_API_URL}/expense/getallexpenses`,
           { email: currUser.email }
         );
-
-        // console.log("Chachu",expenses.data);
-
         setCurrUserTotalExpenses(expenses.data);
-
-        //  console.log("SIZE ",expenses.data.length);
       } catch (err) {
         console.log(err);
       }
@@ -252,19 +245,6 @@ export default function Home() {
     }
 
     currUserTotalExpenses.map(function (expense, index) {
-      //      expense.splits.map(function(split){
-      //           if(split.email!=currUser.email){
-      //             const val=expenseMap.get(split.email);
-      //             if(!val){
-      //             expenseMap.set(split.email,split.share*expense.amount);
-      //             }
-      //             else{
-      //               expenseMap.set(split.email,split.share*expense.amount+val);
-      //             }
-      //           }
-      //      });
-      // }
-
       if (expense.paidBy === currUser._id) {
         expense.splits.map(function (split) {
           if (split.email != currUser.email) {
@@ -277,20 +257,15 @@ export default function Home() {
         });
       } else {
         const split = expense.splits.find((s) => s.email === currUser.email);
-        if (!split) return; // Avoid errors if no matching split is found
+        if (!split) return;
 
         const share = split.share / 100;
-        const userEmail = emailOfPaidBy[index]?.email; // Extract email safely
+        const userEmail = emailOfPaidBy[index]?.email;
 
-        if (!userEmail) return; // Ensure userEmail is valid before updating
+        if (!userEmail) return;
 
-        // Retrieve current value safely; default to 0 if not found
         const currentValue = expenseMap.get(userEmail) || 0;
-
-        // Update the map with accumulated values
         expenseMap.set(userEmail, currentValue - share * expense.amount);
-
-        // console.log(`Updated ${userEmail}: ${expenseMap.get(userEmail)}`);
       }
     });
 
@@ -304,15 +279,12 @@ export default function Home() {
       }
     });
 
-    // console.log(currUserTotalExpenses.length);
-
     var totalLent = 0;
     var totalOwed = 0;
 
     var oList = [];
     var LList = [];
     expenseMap.forEach(function (value, key) {
-      // console.log(key,value);
       if (value < 0) {
         totalOwed += value;
         oList.push({ email: key, amount: value.toFixed(2) });
@@ -320,7 +292,6 @@ export default function Home() {
         totalLent += value;
         LList.push({ email: key, amount: value.toFixed(2) });
       }
-      // console.log(key,value);
     });
     setLent(Number(totalLent.toFixed(2)));
     setOwed(Number(totalOwed.toFixed(2)));
@@ -379,7 +350,6 @@ export default function Home() {
     setCurrFriend(friend);
     setMembers([50, 50]);
     setResetDone(false);
-    // setFriendDependency(false);
   }
 
   useEffect(() => {
@@ -392,9 +362,9 @@ export default function Home() {
 
   useEffect(() => {
     if (addExpense || showSettle || addFriend) {
-      document.body.style.overflow = "hidden"; // Prevent scrolling
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; // Restore scrolling
+      document.body.style.overflow = "auto";
     }
 
     return () => {
@@ -412,8 +382,6 @@ export default function Home() {
           `${import.meta.env.VITE_API_URL}/group/fetch`,
           currUser
         );
-
-        // console.log(res.data);
         setGroups(res.data);
       } catch (err) {
         console.log(err);
@@ -434,28 +402,31 @@ export default function Home() {
   const { dashBoard, setDashBoard, expenses, setExpenses, recent, setRecent } =
     useContext(myContext);
 
-  // if (!currUser) {
-
-  //   return
-  //    <Loading />;
-  // }
   return (
-    <div className=" px-[15px] py-[80px] z-0  h-screen relative flex ">
-      {/* Left Section */}
+    // Main Container: Column on mobile, Row on Desktop. Full Screen.
+    <div className="w-full h-screen bg-gray-50 flex flex-col lg:flex-row overflow-hidden pt-[64px] font-sans">
+      
+      {/* --- Left Section (Sidebar/Navigation) --- 
+          Mobile: Scrollable top strip. Desktop: Fixed sidebar. */}
       <div
-        className={`flex-1 pr-5 border-r lg:flex-none lg:w-80 ${(addExpense || addFriend || showSettle) && "opacity-10"} border-gray-200`}
+        className={`flex-none bg-white border-b lg:border-b-0 lg:border-r border-gray-200 
+        w-full lg:w-80 h-auto max-h-[35vh] lg:max-h-full lg:h-full 
+        overflow-y-auto overflow-x-hidden z-20 shadow-sm lg:shadow-none
+        transition-all duration-300
+        ${(addExpense || addFriend || showSettle) ? "opacity-50 pointer-events-none" : ""}`}
       >
-        <div className="flex flex-col gap-8">
-          {/* Header */}
-          <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-6 p-4 lg:p-6">
+          
+          {/* Dashboard / Recent Links */}
+          <div className="flex flex-row lg:flex-col gap-4 lg:gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 items-center lg:items-start min-w-max lg:min-w-0">
             <span
-              className="text-2xl font-bold text-indigo-600 cursor-pointer"
+              className="px-3 py-2 lg:px-0 lg:py-0 text-lg lg:text-xl font-bold text-gray-700 hover:text-indigo-600 cursor-pointer transition-colors whitespace-nowrap"
               onClick={dashboardClick}
             >
               Dashboard
             </span>
             <span
-              className="text-sm text-gray-500 flex items-center gap-2 cursor-pointer"
+              className="flex items-center gap-2 px-3 py-2 lg:px-0 lg:py-0 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 lg:bg-transparent rounded-full lg:rounded-none cursor-pointer transition-colors whitespace-nowrap"
               onClick={recentClick}
             >
               <svg
@@ -474,19 +445,19 @@ export default function Home() {
               </svg>
               Recent Activity
             </span>
+             {/* All Expenses (Mobile: Tucked in here / Desktop: List below) */}
+             <div className="lg:hidden flex items-center gap-2 px-3 py-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-100 rounded-full cursor-pointer whitespace-nowrap" onClick={expenseClick}>
+                All Expenses
+             </div>
           </div>
 
-          {/* All Expenses Card */}
-          <div className="space-y-6">
-            {/* All Expenses Header */}
-            <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-              <h3
-                className="font-semibold !text-[15px] flex items-center gap-2"
-
-              >
+          {/* All Expenses Section (Desktop Only Visual) */}
+          <div className="hidden lg:block space-y-4">
+            <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+              <h3 className="font-semibold text-[15px] flex items-center gap-2 text-gray-700">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-red-500"
+                  className="h-5 w-5 text-indigo-500"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -496,18 +467,21 @@ export default function Home() {
                     clipRule="evenodd"
                   />
                 </svg>
-                All Expenses
+                Expenses
               </h3>
-              <span onClick={expenseClick} className="text-sm text-blue-600 cursor-pointer hover:underline">
-                See All
+              <span
+                onClick={expenseClick}
+                className="text-xs font-medium text-indigo-600 cursor-pointer hover:text-indigo-800 transition-colors"
+              >
+                View All
               </span>
             </div>
           </div>
 
           {/* Groups Section */}
-          <div className="space-y-4">
-            <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-              <h3 className="font-semibold flex items-center gap-2">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+              <h3 className="font-semibold text-gray-700 flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-purple-600"
@@ -517,29 +491,33 @@ export default function Home() {
                   <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                 </svg>
                 <span>Groups</span>
-                <span
-                  className="text-[15px] items-center hover:underline cursor-pointer"
-                  onClick={() => navigate("/creategroup")}
-                >
-                  + Add
-                </span>
               </h3>
-              <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+              <div className="flex items-center gap-2">
+                 <span className="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
                 {groups.length}
               </span>
+              <span
+                className="text-xs font-medium text-gray-400 hover:text-purple-600 cursor-pointer transition-colors"
+                onClick={() => navigate("/creategroup")}
+              >
+                + Add
+              </span>
+              </div>
+             
             </div>
-            <ul className="space-y-3">
+            <ul className="space-y-1 lg:space-y-2 max-h-40 lg:max-h-60 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-200">
               {groups &&
                 groups.map((group, ind) => (
                   <li
                     onClick={() => handleGroup(group)}
                     key={ind}
-                    className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+                    className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all duration-200 border border-transparent
+                      ${currGroup?._id === group._id ? "bg-purple-50 border-purple-100" : "hover:bg-gray-50"}`}
                   >
-                    <div className="h-8 w-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <div className="h-8 w-8 bg-purple-100 text-purple-600 rounded-lg flex-shrink-0 flex items-center justify-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-purple-600"
+                        className="h-4 w-4"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -550,9 +528,9 @@ export default function Home() {
                         />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium">{group.name}</p>
-                      <p className="text-xs text-gray-500">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-700 truncate">{group.name}</p>
+                      <p className="text-[10px] text-gray-400">
                         {group.members.length} members
                       </p>
                     </div>
@@ -562,12 +540,12 @@ export default function Home() {
           </div>
 
           {/* Friends Section */}
-          <div className="space-y-4">
-            <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-              <h3 className="font-semibold flex items-center gap-2">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+              <h3 className="font-semibold text-gray-700 flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-green-600"
+                  className="h-5 w-5 text-emerald-600"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -578,21 +556,29 @@ export default function Home() {
                   />
                 </svg>
                 <span>Friends</span>
-
               </h3>
-              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+              <div className="flex items-center gap-2">
+              <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
                 {currUser?.friends.length}
               </span>
+              <span
+                 className="text-xs font-medium text-gray-400 hover:text-emerald-600 cursor-pointer transition-colors"
+                 onClick={() => setAddFriend(true)}
+              >
+                  + Add
+              </span>
+              </div>
             </div>
-            <ul className="space-y-3">
+            <ul className="space-y-1 lg:space-y-2 max-h-40 lg:max-h-60 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-200">
               {friends &&
                 friends.map((friend) => (
                   <li
                     key={friend}
                     onClick={() => handleFriend(friend)}
-                    className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+                    className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all duration-200 border border-transparent
+                        ${currFriend?._id === friend?._id ? "bg-emerald-50 border-emerald-100" : "hover:bg-gray-50"}`}
                   >
-                    <div className="relative">
+                    <div className="relative flex-shrink-0">
                       <div className="h-8 w-8 bg-blue-100 rounded-lg flex items-center justify-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -607,11 +593,10 @@ export default function Home() {
                           />
                         </svg>
                       </div>
-                      <div className="absolute bottom-0 right-0 h-2 w-2 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-emerald-500 rounded-full border-2 border-white"></div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium"> {friend?.name}</p>
-                      {/* <p className="text-xs text-gray-500">Last seen 2h ago</p> */}
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-700 truncate"> {friend?.name}</p>
                     </div>
                   </li>
                 ))}
@@ -620,217 +605,210 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Center Section */}
-
+      {/* --- Center Section (Main Content) --- */}
       <div
-        className={`lg:flex-3 h-[100%] w-full ${(addExpense || addFriend || showSettle) && "opacity-10"
-          }`}
+        className={`flex-1 w-full h-full overflow-y-auto relative bg-gray-50 p-4 lg:p-8
+        transition-opacity duration-300
+        ${(addExpense || addFriend || showSettle) ? "opacity-30 pointer-events-none lg:opacity-30" : ""}`}
       >
-        {/* Header */}
-
+        {/* Loading State */}
         {!dashBoard && !recent && !currFriend && !currGroup && !expenses && (
-          <Loading />
+          <div className="flex justify-center items-center h-full">
+            <Loading />
+          </div>
         )}
 
+        {/* Content Header */}
         {!recent && (
-          <div className={`flex space-x-3 pr-9 pl-2 items-center justify-between mb-6`}>
-            <h1
-              className="!text-[20px] font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
-            // onClick={() => setAddExpense(true)}
-            >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 sticky top-0 bg-gray-50/95 backdrop-blur-sm z-10 py-2">
+            <h1 className="text-2xl lg:text-3xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent truncate">
               {currGroup
                 ? currGroup.name
                 : dashBoard
-                  ? "DashBoard"
-                  : expenses
-                    ? "All Expenses"
-                    : currFriend
-                      ? currFriend.name
-                      : ""}
+                ? "Dashboard"
+                : expenses
+                ? "All Expenses"
+                : currFriend
+                ? currFriend.name
+                : ""}
             </h1>
 
+            {/* Action Buttons */}
             {!dashBoard && !expenses && (
-              <div className="flex  gap-2">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 <button
                   onClick={() => setAddExpense(true)}
-                  className="flex items-center h-[30px] w-[80px] gap-1 px-3 py-1.5 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-all shadow-sm hover:shadow-md"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium shadow-md"
                 >
-                  <FaPlus className="text-sm hidden" />
-                  <span className="text-[10px]">Add Expense</span>
+                  <FaPlus className="text-xs" />
+                  <span>Add Expense</span>
                 </button>
 
                 {currFriend && (
+                  <>
                   <button
                     onClick={() => setShowSettle(1)}
-                    className="flex items-center h-[30px] w-[80px] gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium shadow-md"
                   >
-                    <FaHandshake className=" hidden text-sm" />
-                    <span className="text-[10px]">Settle Up</span>
+                    <FaHandshake className="text-xs" />
+                    <span>Settle Up</span>
                   </button>
+                   <button
+                   onClick={() => setSettledExpenses(1)}
+                   className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 hover:shadow-md transition-all duration-200 text-sm font-medium shadow-sm"
+                 >
+                   <ThumbUpAltIcon className="!text-sm text-gray-500" />
+                   <span className="hidden sm:inline">Settled</span>
+                 </button>
+                 </>
                 )}
+
                 {currGroup && (
-
                   <div className="flex items-center gap-2">
-                    {isChatOpen ? <button
-                      onClick={() => setIsChatOpen(false)}
-                      className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
+                    <button
+                      onClick={() => setIsChatOpen(!isChatOpen)}
+                      className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium shadow-md ${isChatOpen ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-teal-600 text-white hover:bg-teal-700 hover:shadow-lg hover:-translate-y-0.5'}`}
                     >
-
-
-                      <Chat className="hidden text-sm" />
-                      <span className="text-[10px]">Close Chat</span>
-                    </button> : <button
-                      onClick={() => setIsChatOpen(true)}
-                      className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
-                    >
-
-
-                      <Chat className="hidden text-sm" />
-                      <span className="text-[10px]">Open Chat</span>
-                    </button>}
-
+                      <Chat className="!text-sm" />
+                      <span>{isChatOpen ? "Close Chat" : "Chat"}</span>
+                    </button>
 
                     <button
                       onClick={() => setShowSettle(1)}
-                      className="flex items-center h-[30px] w-[80px]   gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-sm font-medium shadow-md"
                     >
-
-
-                      <FaHandshake className="hidden text-sm" />
-                      <span className="text-[10px]">Settle Up</span>
-                    </button></div>
-
-
-                )}
-                {currFriend && (
-                  <button
-                    onClick={() => setSettledExpenses(1)}
-                    className="flex items-center h-[30px] w-[80px] gap-1 px-3 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all shadow-sm hover:shadow-md"
-                  >
-                    <ThumbUpAltIcon className="!hidden text-sm " />
-                    <span className="text-[8px]">Show Settled Expenses</span>
-                  </button>
+                      <FaHandshake className="text-xs" />
+                      <span className="hidden sm:inline">Settle Up</span>
+                    </button>
+                  </div>
                 )}
               </div>
             )}
           </div>
         )}
 
-        {dashBoard && (
-          <Dashboard
-            lent={lent}
-            owed={owed}
-            setOwed={setOwed}
-            setLent={setLent}
-            owedList={owedList}
-            setOwedList={setOwedList}
-            lentList={lentList}
-            setLentList={setLentList}
-          />
-        )}
-        {expenses && (
-          <Expenses
-            currUser={currUser}
-            emailOfPaidBy={emailOfPaidBy}
-            currUserTotalExpenses={currUserTotalExpenses}
-          />
-        )}
-        {recent && (
-          <Recent
-            currUserSettledExpenses={currUserSettledExpenses}
-            emailOfPaidBy={emailOfPaidBy}
-            currUserTotalExpenses={currUserTotalExpenses}
-          />
-        )}
+        {/* Dynamic Components */}
+        <div className="pb-20 lg:pb-0"> 
+          {dashBoard && (
+            <Dashboard
+              lent={lent}
+              owed={owed}
+              setOwed={setOwed}
+              setLent={setLent}
+              owedList={owedList}
+              setOwedList={setOwedList}
+              lentList={lentList}
+              setLentList={setLentList}
+            />
+          )}
+          {expenses && (
+            <Expenses
+              currUser={currUser}
+              emailOfPaidBy={emailOfPaidBy}
+              currUserTotalExpenses={currUserTotalExpenses}
+            />
+          )}
+          {recent && (
+            <Recent
+              currUserSettledExpenses={currUserSettledExpenses}
+              emailOfPaidBy={emailOfPaidBy}
+              currUserTotalExpenses={currUserTotalExpenses}
+            />
+          )}
 
-        {currGroup && (
-          <Groups
-            key={groupKey}
-            groupSettlesList={groupSettlesList}
-            groupMembers={groupMembers}
-            expenses={expensesList}
-            setExpenses={setExpensesList}
-            group={currGroup}
-            showSettle={showSettle}
-            setShowSettle={setShowSettle}
-            isChatOpen={isChatOpen}
-            setIsChatOpen={setIsChatOpen}
-          />
-        )}
-        {currFriend && (
-          <Friends
-            key={friendKey}
-            currFriendMoney={currFriendMoney}
-            setCurrFriendMoney={setCurrFriendMoney}
-            setSettledExpenses={setSettledExpenses}
-            settledExpenses={settledExpenses}
-            currUserSettledExpenses={currUserSettledExpenses}
-            showSettle={showSettle}
-            setShowSettle={setShowSettle}
-            friend={currFriend}
-            owedList={owedList}
-            lentList={lentList}
-            setResetDone={setResetDone}
-            resetDone={resetDone}
-          />
-        )}
+          {currGroup && (
+            <Groups
+              key={groupKey}
+              groupSettlesList={groupSettlesList}
+              groupMembers={groupMembers}
+              expenses={expensesList}
+              setExpenses={setExpensesList}
+              group={currGroup}
+              showSettle={showSettle}
+              setShowSettle={setShowSettle}
+              isChatOpen={isChatOpen}
+              setIsChatOpen={setIsChatOpen}
+            />
+          )}
+          {currFriend && (
+            <Friends
+              key={friendKey}
+              currFriendMoney={currFriendMoney}
+              setCurrFriendMoney={setCurrFriendMoney}
+              setSettledExpenses={setSettledExpenses}
+              settledExpenses={settledExpenses}
+              currUserSettledExpenses={currUserSettledExpenses}
+              showSettle={showSettle}
+              setShowSettle={setShowSettle}
+              friend={currFriend}
+              owedList={owedList}
+              lentList={lentList}
+              setResetDone={setResetDone}
+              resetDone={resetDone}
+            />
+          )}
+        </div>
       </div>
 
-      {/* Right Section */}
-
+      {/* --- Right Section (Details/Summary) --- 
+          Hidden on Mobile (or stacked bottom if critical, but sticking to "Sidebar" feel). 
+          Visible on XL screens. */}
       <div
-        className={`flex-1 ${(addExpense || addFriend || showSettle) &&
-          "opacity-10 backdrop-blur-2xl "
-          }`}
+        className={`hidden xl:block w-80 flex-none bg-white border-l border-gray-200 h-full p-6 overflow-y-auto 
+          ${(addExpense || addFriend || showSettle) ? "opacity-50 pointer-events-none" : ""}`}
       >
         {currFriend && (
-          <div className="max-w-md  p-6 bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             {currFriendMoney == 0 ? (
-              <div className="flex flex-col items-center text-center p-4 w-[160px] mx-auto bg-green-50 rounded-lg">
-                <CheckCircleIcon className="h-8 w-8 text-green-600 mb-2" />
-                <p className="text-green-800 text-[12px] font-medium">
-                  You're all settled up!
+              <div className="flex flex-col items-center text-center p-6 bg-green-50 rounded-xl border border-green-100">
+                <div className="bg-white p-2 rounded-full mb-3 shadow-sm">
+                   <CheckCircleIcon className="h-8 w-8 text-green-500" />
+                </div>
+                <p className="text-green-900 font-semibold mb-1">
+                  All settled up!
                 </p>
-                <p className="text-green-600 text-[12px]">
+                <p className="text-green-600 text-xs">
                   No balances with {currFriend.name}
                 </p>
               </div>
             ) : currFriendMoney < 0 ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-orange-600">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-orange-600 font-semibold border-b border-gray-100 pb-2">
                   <ScaleIcon className="h-5 w-5" />
-                  <span className="text-sm font-semibold">Your balance</span>
+                  <span className="text-sm">Balance Status</span>
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-orange-50 rounded-lg">
-                  <ArrowDownIcon className="h-6 w-6 text-orange-500" />
+                <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-xl border border-orange-100">
+                  <div className="bg-white p-1.5 rounded-lg shadow-sm">
+                     <ArrowDownIcon className="h-5 w-5 text-orange-500" />
+                  </div>
                   <div>
-                    <p className="text-sm text-gray-600">You owe</p>
-                    <p className="font-semibold text-orange-600">
+                    <p className="text-xs font-medium text-orange-800 uppercase tracking-wide">You owe</p>
+                    <p className="font-bold text-orange-700 text-lg">
                       {currFriend.name}
-                      <span className="ml-2 text-lg break-words">
-                        ₹{Math.abs(currFriendMoney)}
-                      </span>
+                    </p>
+                    <p className="font-extrabold text-2xl text-orange-600 mt-1">
+                      ₹{Math.abs(currFriendMoney)}
                     </p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-purple-600">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-purple-600 font-semibold border-b border-gray-100 pb-2">
                   <ScaleIcon className="h-5 w-5" />
-                  <span className="text-sm font-semibold">Your balance</span>
+                  <span className="text-sm">Balance Status</span>
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-purple-50 rounded-lg">
-                  <ArrowUpIcon className="h-6 w-6 text-purple-500" />
+                <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-xl border border-purple-100">
+                   <div className="bg-white p-1.5 rounded-lg shadow-sm">
+                     <ArrowUpIcon className="h-5 w-5 text-purple-500" />
+                  </div>
                   <div>
-                    <p className="font-semibold text-purple-600">
+                    <p className="font-bold text-purple-700 text-lg">
                       {currFriend.name}
                     </p>
-                    <p className=" text-sm text-gray-600">
-                      Owes you
-                      <span className="ml-2 text-lg font-semibold text-purple-600">
-                        ₹{Math.abs(currFriendMoney)}
-                      </span>
+                    <p className="text-xs font-medium text-purple-800 uppercase tracking-wide">Owes you</p>
+                    <p className="font-extrabold text-2xl text-purple-600 mt-1">
+                      ₹{Math.abs(currFriendMoney)}
                     </p>
                   </div>
                 </div>
@@ -840,17 +818,15 @@ export default function Home() {
         )}
 
         {currGroup && (
-          <div className="max-w-md mx-auto  space-y-4">
-            {/* Header */}
-            <div className="mb-4">
-              <h1 className="!text-[20px] font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+          <div className="space-y-6">
+            <div className="border-b border-gray-100 pb-4">
+              <h1 className="text-xl font-bold text-gray-800">
                 Group Balances
               </h1>
-              <div className="h-1 bg-gradient-to-r from-blue-500 to-purple-600 w-24 mt-1 rounded-full"></div>
+              <div className="h-1 bg-gradient-to-r from-purple-500 to-pink-500 w-16 mt-2 rounded-full"></div>
             </div>
 
-            {/* Members List */}
-            <ul className="space-y-3 !pl-0">
+            <ul className="space-y-3">
               {currGroup.members.map((member, index) => {
                 let totalMoney = 0;
                 expensesList.forEach((expense) => {
@@ -877,30 +853,33 @@ export default function Home() {
                 return (
                   <li
                     key={member.email}
-                    className="flex min-w-[160px]  mr-3 items-center p-2 bg-white rounded-lg shadow-md border-l-4 border-purple-500 hover:border-pink-500 transition-all duration-200"
+                    className="flex items-center p-3 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-purple-200 transition-all duration-200 group"
                   >
-                    {/* Profile Image */}
-                    <img
-                      src={groupMembers[index]?.profilePicture || ""}
-                      className="w-7 h-7 rounded-full border-2 border-purple-200 mr-3"
-                      alt="Profile"
-                    />
-
-                    {/* Member Details */}
-                    <div className="flex-1">
-                      <span className="font-semibold text-gray-800 text-[14px]">
+                    <div className="relative">
+                       <img
+                        src={groupMembers[index]?.profilePicture || ""}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm mr-3"
+                        alt="Profile"
+                      />
+                      <div className={`absolute -bottom-1 -right-0 w-3 h-3 rounded-full border-2 border-white ${totalMoney < 0 ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                    </div>
+                   
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm truncate">
                         {groupMembers[index]?.name}
-                      </span>
-                      <div className="flex justify-between items-center mt-0.5">
+                      </p>
+                      <div className="flex flex-col">
                         <span
-                          className={`text-[10px] font-medium ${totalMoney < 0 ? "text-red-600" : "text-green-600"
-                            }`}
+                          className={`text-[11px] font-medium uppercase tracking-wider ${
+                            totalMoney < 0 ? "text-red-500" : "text-green-500"
+                          }`}
                         >
                           {totalMoney < 0 ? "owes" : "gets back"}
                         </span>
                         <span
-                          className={`text-[15px] font-semibold ${totalMoney < 0 ? "text-red-600" : "text-green-600"
-                            }`}
+                          className={`text-sm font-bold ${
+                            totalMoney < 0 ? "text-red-600" : "text-green-600"
+                          }`}
                         >
                           ₹{Math.abs(totalMoney).toFixed(2)}
                         </span>
@@ -914,42 +893,50 @@ export default function Home() {
         )}
       </div>
 
+      {/* --- Modals & Overlays --- */}
+
       {addFriend && (
-        <div className="fixed inset-0   flex justify-center items-center">
-          <AddFriend setAddFriend={setAddFriend} className="" />
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+           <div className="w-full max-w-md">
+             <AddFriend setAddFriend={setAddFriend} className="" />
+           </div>
         </div>
       )}
 
       {showSettle && currGroup && (
-        <div className="absolute top-30 left-4 right-4 z-20">
-          <GroupSettle
-            group={currGroup}
-            groupMembers={groupMembers}
-            showSettle={showSettle}
-            setShowSettle={setShowSettle}
-          />
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl relative overflow-hidden">
+             {/* Close button handling usually inside the component or add a wrapper here */}
+            <GroupSettle
+              group={currGroup}
+              groupMembers={groupMembers}
+              showSettle={showSettle}
+              setShowSettle={setShowSettle}
+            />
+          </div>
         </div>
       )}
 
       {showSettle && currFriend && (
-        <div className="absolute top-40 left-4 right-4 z-20">
-          <SettleUp
-            friend={currFriend}
-            // groupMembers={groupMembers}
-            showSettle={showSettle}
-            setShowSettle={setShowSettle}
-          />
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl relative">
+            <SettleUp
+              friend={currFriend}
+              showSettle={showSettle}
+              setShowSettle={setShowSettle}
+            />
+          </div>
         </div>
       )}
 
       {addExpense && (
-        <div className="fixed inset-0  flex justify-center gap-11 items-center">
-          <div className="flex justify-center ">
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="flex justify-center w-full max-w-4xl relative">
             <motion.div
-              className="flex-1"
+              className="w-full max-w-lg relative z-10"
               initial={{ x: 0 }}
-              animate={{ x: share ? -30 : 0 }} // Moves left when `share` appears
-              transition={{ duration: 0.5, ease: "easeInOut" }} // Smooth animation
+              animate={{ x: share ? -20 : 0 }} 
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
               <AddExpense
                 members={members}
@@ -962,12 +949,13 @@ export default function Home() {
                 setShow={setAddExpense}
               />
             </motion.div>
+            
             {share && (
               <motion.div
-                className="flex-1"
-                initial={{ x: 0 }}
-                animate={{ x: share ? 30 : 0 }} // Moves left when `share` appears
-                transition={{ duration: 0.5, ease: "easeInOut" }} // Smooth animation
+                className="hidden lg:block w-full max-w-md ml-4"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <Share
                   members={members}
@@ -978,6 +966,19 @@ export default function Home() {
                 />
               </motion.div>
             )}
+             {/* Mobile handling for Share often needs a separate modal or stack, but preserving logic structure here */}
+             {share && (
+                <div className="lg:hidden fixed inset-0 z-60 bg-white p-4 overflow-y-auto">
+                    <button className="mb-4 text-indigo-600 font-bold" onClick={()=>setShare(false)}>← Back</button>
+                    <Share
+                    members={members}
+                    setMembers={setMembers}
+                    currUser={currUser}
+                    wit={currGroup ? currGroup : currFriend}
+                    type={currGroup ? "Group" : currFriend ? "Friend" : ""}
+                    />
+                </div>
+             )}
           </div>
         </div>
       )}
