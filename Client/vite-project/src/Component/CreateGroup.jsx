@@ -12,7 +12,13 @@ import {
   BookOpen,
   Settings,
   Upload,
-  Users,Plus,ChevronDown,Briefcase,Home,Coffee, Percent ,
+  Users,
+  Plus,
+  ChevronDown,
+  Briefcase,
+  Home,
+  Coffee,
+  Percent,
   Moon,
   Sun,
   Lock,
@@ -36,8 +42,11 @@ import {
   BarChart3,
   Filter,
   FileText,
+  Sparkles,
+  PieChart
 } from "lucide-react";
 import Fraction from 'fraction.js';
+
 export default function CreateGroup() {
   // ... [keep all existing logic the same] ...
   const [file, setFile] = useState("");
@@ -50,10 +59,11 @@ export default function CreateGroup() {
   const navigate = useNavigate();
   const [groupType, setGroupType] = useState(null);
   const [members, setMembers] = useState([]);
-  const { currUser ,lightMode } = useContext(myContext);
+  const { currUser, lightMode } = useContext(myContext);
   const [showSuccessMessage, setShowSuccessMessage] = useState("");
   const [showErrorMessage, setShowErrorMessage] = useState("");
   const [saving, setSaving] = useState(false);
+
   // Handle file upload and preview 📸
   function handleChange(e) {
     const newFile = e.target.files[0];
@@ -63,8 +73,7 @@ export default function CreateGroup() {
     setFile(e.target.files[0]);
   }
 
-
-   const showSuccess = (message) => {
+  const showSuccess = (message) => {
     setShowSuccessMessage(message);
     setShowErrorMessage("");
     setTimeout(() => setShowSuccessMessage(""), 3000);
@@ -76,8 +85,6 @@ export default function CreateGroup() {
     setShowSuccessMessage("");
     setTimeout(() => setShowErrorMessage(""), 3000);
   };
-
-
 
   function handleChangeInShare(index, e) {
     e.preventDefault();
@@ -94,7 +101,6 @@ export default function CreateGroup() {
     });
 
     setTotal(t);
-
     setMembers(updatedMembers);
   }
 
@@ -105,9 +111,8 @@ export default function CreateGroup() {
       setSaving(false);
       return;
     }
-    if(members.length === 0) {
+    if (members.length === 0) {
       showError("Please add at least one member");
-      
       setSaving(false);
       return;
     }
@@ -126,18 +131,6 @@ export default function CreateGroup() {
       data.append("createdBy", currUser.name);
       data.append("createdByEmail", currUser.email);
 
-      // // Debug: log all entries in FormData
-      // for (let [key, value] of data.entries()) {
-      //   console.log(key, value);
-      // }
-
-
-
-
-
-
-
-
       await Promise.all(
         members.map(async function (member, index) {
           members.map(async function (m, i) {
@@ -146,17 +139,8 @@ export default function CreateGroup() {
               return res;
             }
           })
-
-
-
         })
-
-
-
       )
-
-
-
 
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/group/create`,
@@ -172,11 +156,10 @@ export default function CreateGroup() {
       showSuccess("Group Created Successfully!");
     } catch (err) {
       console.error("Error creating group", err);
-       setSaving(false);
-       showError("Failed to create group. Please try again.");
+      setSaving(false);
+      showError("Failed to create group. Please try again.");
     }
   }
-
 
   function handleChangee(e, index) {
     const updatedMembers = members.map(function (m, i) {
@@ -207,15 +190,12 @@ export default function CreateGroup() {
     });
 
     setMembers(updatedMembers);
-
-    // Update share state properly
-    // setShare(updatedMembers.map(member => member.share));
   }
 
-  function  handleRemove(index) {
+  function handleRemove(index) {
     if (members.length <= 1) return; // Prevent removing the last member
     const updatedMembers = members.filter((_, i) => i !== index);
-    
+
     // Recalculate shares to maintain total of 100%
     const newShareValue = 100 / updatedMembers.length;
     const recalculatedMembers = updatedMembers.map(member => ({
@@ -242,219 +222,333 @@ export default function CreateGroup() {
   }, []);
 
   return (
-<div className={`min-h-screen transition-all duration-300 ${lightMode 
-  ? 'bg-gradient-to-tr from-sky-100 via-rose-50 to-teal-100' 
-  : 'bg-gradient-to-br from-gray-900 via-slate-900 to-black'
-} py-8 px-4 sm:px-6`}>
-
-  <div className="max-w-6xl mt-24 mx-auto space-y-6">
-    {/* Header */}
-    <div className="text-center space-y-2">
-      <h1 className={`text-4xl sm:text-5xl font-black bg-gradient-to-r ${
-        lightMode 
-          ? 'from-red-600 via-purple-600 to-rose-500' 
-          : 'from-cyan-400 via-purple-400 to-rose-400'
-      } bg-clip-text text-transparent leading-tight`}>
-        Assemble Your Crew
-      </h1>
-      <p className={`text-md sm:text-lg font-normal ${
-        lightMode ? 'text-slate-600' : 'text-slate-400'
-      }`}>
-        Create a group to share expenses and stay organized.
-      </p>
-    </div>
-
-    {/* --- Success & Error Messages (No style changes needed, they are already great) --- */}
-    {/* Success Message */}
-    {showSuccessMessage && (
-      <div className="fixed top-5 right-5 max-w-sm w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white px-5 py-3 rounded-xl shadow-2xl z-50 flex items-center backdrop-blur-sm border border-white/20 transform animate-bounce">
-        <div className="w-8 h-8 mr-3 bg-white/30 rounded-full flex items-center justify-center flex-shrink-0"><Check className="w-5 h-5" /></div>
-        <span className="font-semibold text-sm">{showSuccessMessage}</span>
-      </div>
-    )}
-
-    {/* Error Message */}
-    {showErrorMessage && (
-      <div className="fixed top-5 right-5 max-w-sm w-full bg-gradient-to-r from-red-500 to-rose-500 text-white px-5 py-3 rounded-xl shadow-2xl z-50 flex items-center backdrop-blur-sm border border-white/20 transform animate-bounce">
-        <div className="w-8 h-8 mr-3 bg-white/30 rounded-full flex items-center justify-center flex-shrink-0"><AlertTriangle className="w-5 h-5" /></div>
-        <span className="font-semibold text-sm">{showErrorMessage}</span>
-      </div>
-    )}
-
-    {/* Main Form Container */}
-    <div className={`${
+    <div className={`min-h-screen transition-all duration-500 font-sans ${
       lightMode 
-        ? 'bg-white/70 backdrop-blur-xl shadow-2xl border border-white/50' 
-        : 'bg-slate-800/60 backdrop-blur-xl shadow-2xl border border-slate-700/50'
-    } rounded-2xl p-6 sm:p-8 transition-all duration-300`}>
-      
-      {/* Group Identity Section - More Horizontal */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center mb-8">
+        ? 'bg-[#F3F4F6] text-gray-900' 
+        : 'bg-[#0f172a] text-gray-100'
+    }`}>
+      {/* Decorative Background Elements */}
+      <div className={`fixed inset-0 pointer-events-none overflow-hidden ${lightMode ? 'opacity-40' : 'opacity-20'}`}>
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-purple-400 blur-[120px]" />
+        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] rounded-full bg-cyan-400 blur-[120px]" />
+      </div>
+
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-20">
         
-        {/* Avatar Upload */}
-        <div className="flex flex-col items-center justify-center space-y-2 lg:col-span-1">
-          <label className="group relative w-28 h-28 rounded-full border-4 border-white dark:border-slate-600 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105">
-            <img
-              src={fileToShow || "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=150&h=150&fit=crop&crop=faces"}
-              alt="Group Icon"
-              className="w-full h-full object-cover rounded-full"
-            />
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full">
-              <Upload className="w-7 h-7 text-white drop-shadow-lg" />
-            </div>
-            <input type="file" onChange={handleChange} className="hidden" accept="image/*" />
-          </label>
+        {/* --- Header --- */}
+        <div className="text-center space-y-4 mb-12">
+          <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium border ${
+            lightMode ? 'bg-white/50 border-gray-200 text-purple-600' : 'bg-gray-800/50 border-gray-700 text-purple-400'
+          }`}>
+            <Sparkles className="w-4 h-4" />
+            <span>Create New Workspace</span>
+          </div>
+          <h1 className={`text-4xl md:text-6xl font-black tracking-tight ${
+            lightMode ? 'text-gray-900' : 'text-white'
+          }`}>
+            Assemble Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-cyan-500">Squad</span>
+          </h1>
+          <p className={`text-lg max-w-xl mx-auto ${
+            lightMode ? 'text-gray-500' : 'text-gray-400'
+          }`}>
+            Effortless expense tracking starts here. Set up your group, invite friends, and split costs in seconds.
+          </p>
         </div>
 
-        {/* Group Name & Type Inputs */}
-        <div className="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Group Name Input */}
-            <div className="space-y-2">
-              <label className={`block text-xs font-bold ${lightMode ? 'text-slate-700' : 'text-slate-300'} uppercase tracking-wider`}>Group Name</label>
-              <input
-                type="text"
-                value={groupName}
-                placeholder="The Avengers..."
-                className={`w-full px-4 py-3 rounded-lg border-2 ${
-                  lightMode 
-                    ? 'border-slate-200 bg-white/80 text-slate-900 placeholder-slate-400 focus:border-cyan-500' 
-                    : 'border-slate-600 bg-slate-700/50 text-white placeholder-slate-400 focus:border-cyan-400'
-                } focus:ring-2 focus:ring-cyan-500/20 transition-all duration-300 font-medium text-base`}
-                onChange={(e) => setGroupName(e.target.value)}
-              />
+        {/* --- Success & Error Toasts --- */}
+        <div className="fixed top-6 right-6 z-50 flex flex-col gap-2">
+          {showSuccessMessage && (
+            <div className="animate-in slide-in-from-right fade-in duration-300 bg-emerald-500 text-white px-6 py-4 rounded-2xl shadow-xl shadow-emerald-500/20 flex items-center gap-3 backdrop-blur-md border border-white/20">
+              <div className="p-1 bg-white/20 rounded-full"><Check className="w-4 h-4" /></div>
+              <span className="font-semibold">{showSuccessMessage}</span>
             </div>
-
-            {/* Group Type Dropdown */}
-            <div className="space-y-2">
-              <label className={`block text-xs font-bold ${lightMode ? 'text-slate-700' : 'text-slate-300'} uppercase tracking-wider`}>Group Type</label>
-              <div className="relative" ref={ddropRef}>
-                <button onClick={() => setDrop(!drop)} className={`w-full px-4 py-3 text-left ${
-                    lightMode 
-                      ? 'bg-white/80 border-slate-200 hover:border-slate-300 text-slate-800' 
-                      : 'bg-slate-700/50 border-slate-600 hover:border-slate-500 text-white'
-                  } rounded-lg border-2 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 flex justify-between items-center font-medium text-base`} >
-                  <span className={groupType ? '' : lightMode ? 'text-slate-400' : 'text-slate-400'}>
-                    {groupType || "Select a type"}
-                  </span>
-                  <ChevronDown className={`w-5 h-5 ${lightMode ? 'text-slate-500' : 'text-slate-400'} transform transition-transform duration-300 ${drop ? "rotate-180" : ""}`} />
-                </button>
-                {drop && (
-                  <div ref={dropRef} className={`absolute top-full mt-2 z-20 w-full ${lightMode ? 'bg-white/90 border-slate-200 shadow-xl' : 'bg-slate-800/90 border-slate-700 shadow-2xl'} rounded-lg border backdrop-blur-md overflow-hidden animate-in fade-in-5 zoom-in-95`}>
-                    <ul className="py-1">
-                      {[{ name: 'Trip', icon: Briefcase }, { name: 'Home', icon: Home }, { name: 'Event', icon: Users }, { name: 'Other', icon: Coffee }].map((type) => {
-                        const IconComponent = type.icon;
-                        return (
-                          <li key={type.name} className={`px-4 py-2 ${lightMode ? 'hover:bg-purple-50 text-slate-700 hover:text-purple-700' : 'hover:bg-slate-700 text-slate-300 hover:text-purple-400'} cursor-pointer transition-colors duration-200 flex items-center gap-3 font-medium`} onClick={() => { setGroupType(type.name); setDrop(false); }}>
-                            <IconComponent className="w-5 h-5" />
-                            {type.name}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                )}
-              </div>
+          )}
+          {showErrorMessage && (
+            <div className="animate-in slide-in-from-right fade-in duration-300 bg-rose-500 text-white px-6 py-4 rounded-2xl shadow-xl shadow-rose-500/20 flex items-center gap-3 backdrop-blur-md border border-white/20">
+              <div className="p-1 bg-white/20 rounded-full"><AlertTriangle className="w-4 h-4" /></div>
+              <span className="font-semibold">{showErrorMessage}</span>
             </div>
-        </div>
-      </div>
-
-      {/* Members Section */}
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className={`text-xl font-bold ${lightMode ? 'text-slate-800' : 'text-white'} flex items-center gap-2`}>
-            <Users className="w-6 h-6" />
-            Members & Shares
-          </h3>
-          <button onClick={handleAdd} className={`flex items-center space-x-2 ${lightMode ? 'text-purple-600 hover:text-purple-800 bg-purple-50 hover:bg-purple-100' : 'text-purple-400 hover:text-purple-300 bg-purple-900/30 hover:bg-purple-900/50'} px-3 py-1.5 rounded-lg transition-all duration-300 font-semibold text-sm border-2 border-transparent hover:border-current`}>
-            <Plus className="w-4 h-4" />
-            <span>Add</span>
-          </button>
+          )}
         </div>
 
-        {/* Members Grid - Compact */}
-        <div className="space-y-2">
-          {members.map((m, index) => (
-            <div key={index} className="grid grid-cols-12 gap-2 items-center">
-              {/* Name & Email Inputs */}
-              <div className="col-span-12 sm:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-2">
-                 
-                  <div className="relative">
-                    <Mail className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${lightMode ? 'text-slate-400' : 'text-slate-500'}`} />
-                    <input type="email" placeholder="member@email.com" name="email" value={m.email} className={`w-full pl-9 pr-3 py-2 rounded-md border ${lightMode ? 'border-slate-200 bg-slate-50/70 text-slate-800' : 'border-slate-600 bg-slate-700/50 text-white'} focus:border-rose-400 focus:ring-1 focus:ring-rose-400 transition font-medium`} onChange={(e) => handleChangee(e, index)} />
-                  </div>
+        {/* --- Main Card --- */}
+        <div className={`relative rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 ${
+          lightMode 
+            ? 'bg-white/80 border border-white/60 shadow-purple-500/5' 
+            : 'bg-gray-900/60 border border-gray-800 shadow-black/50'
+        } backdrop-blur-xl`}>
+          
+          <div className="p-6 md:p-10 space-y-10">
+            
+            {/* Top Section: Photo + Basic Info */}
+            <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
+              
+              {/* Photo Upload */}
+              <div className="flex-shrink-0 relative group">
+                <div className={`w-32 h-32 rounded-3xl overflow-hidden border-4 transition-all duration-300 shadow-lg ${
+                  lightMode ? 'border-white shadow-gray-200' : 'border-gray-800 shadow-black'
+                }`}>
+                  <img
+                    src={fileToShow || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=300&q=80"}
+                    alt="Group"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <label className="absolute inset-0 cursor-pointer rounded-3xl flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm">
+                  <Camera className="w-8 h-8 text-white drop-shadow-md" />
+                  <input type="file" onChange={handleChange} className="hidden" accept="image/*" />
+                </label>
+                <div className="absolute -bottom-2 -right-2 bg-purple-500 text-white p-2 rounded-xl shadow-lg transform rotate-6 border-2 border-white dark:border-gray-900">
+                  <Edit3 className="w-4 h-4" />
+                </div>
               </div>
-              {/* Share Input */}
-              <div className="col-span-8 sm:col-span-3">
-                  <div className="relative">
-                    <input type="number" min="0" max="100" onChange={(e) => handleChangeInShare(index, e)} value={m.share} className={`w-full px-3 py-2 rounded-md border ${lightMode ? 'border-slate-200 bg-slate-50/70 text-slate-800' : 'border-slate-600 bg-slate-700/50 text-white'} focus:border-rose-400 focus:ring-1 focus:ring-rose-400 transition font-bold text-center appearance-none`} />
-                    <Percent className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${lightMode ? 'text-slate-400' : 'text-slate-500'}`} />
+
+              {/* Inputs */}
+              <div className="flex-grow w-full space-y-5">
+                <div className="space-y-2">
+                  <label className={`text-xs font-bold uppercase tracking-wider ml-1 ${lightMode ? 'text-gray-500' : 'text-gray-400'}`}>Group Name</label>
+                  <div className="relative group">
+                    <input
+                      type="text"
+                      value={groupName}
+                      placeholder="e.g. Summer Trip 2024"
+                      onChange={(e) => setGroupName(e.target.value)}
+                      className={`w-full bg-transparent px-5 py-4 rounded-2xl border-2 outline-none transition-all duration-200 font-semibold text-lg placeholder:font-normal ${
+                        lightMode 
+                          ? 'border-gray-200 focus:border-purple-500 focus:bg-purple-50/30 text-gray-800 placeholder-gray-400' 
+                          : 'border-gray-700 focus:border-purple-500 focus:bg-purple-900/10 text-white placeholder-gray-500'
+                      }`}
+                    />
                   </div>
-              </div>
-              {/* Remove Button */}
-              <div className="col-span-4 sm:col-span-1 flex justify-end">
-                {members.length > 1 && (
-                  <button onClick={() => handleRemove(index)} className={`p-2 rounded-md transition-colors duration-300 ${lightMode ? 'text-slate-400 hover:bg-red-100 hover:text-red-600' : 'text-slate-500 hover:bg-red-900/40 hover:text-red-400'}`}>
-                    <Trash2 className="w-4 h-4" />
+                </div>
+
+                <div className="space-y-2 relative" ref={ddropRef}>
+                  <label className={`text-xs font-bold uppercase tracking-wider ml-1 ${lightMode ? 'text-gray-500' : 'text-gray-400'}`}>Group Type</label>
+                  <button
+                    onClick={() => setDrop(!drop)}
+                    className={`w-full flex items-center justify-between px-5 py-4 rounded-2xl border-2 transition-all duration-200 ${
+                      lightMode 
+                        ? 'border-gray-200 hover:border-purple-300 bg-gray-50/50 text-gray-800' 
+                        : 'border-gray-700 hover:border-purple-500 bg-gray-800/50 text-white'
+                    }`}
+                  >
+                    <span className="flex items-center gap-3 font-medium">
+                      {groupType ? (
+                         // Simple logic to show icon based on selection, purely visual
+                         <>
+                           {groupType === 'Trip' && <Briefcase className="w-5 h-5 text-purple-500"/>}
+                           {groupType === 'Home' && <Home className="w-5 h-5 text-purple-500"/>}
+                           {groupType === 'Event' && <Users className="w-5 h-5 text-purple-500"/>}
+                           {groupType === 'Other' && <Coffee className="w-5 h-5 text-purple-500"/>}
+                           {groupType}
+                         </>
+                      ) : (
+                        <span className="text-gray-400">Select Category</span>
+                      )}
+                    </span>
+                    <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${drop ? 'rotate-180' : ''}`} />
                   </button>
-                )}
+
+                  {drop && (
+                    <div className={`absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl shadow-xl z-30 border ${
+                      lightMode ? 'bg-white border-gray-100' : 'bg-gray-800 border-gray-700'
+                    } animate-in fade-in zoom-in-95 duration-200`}>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[{ name: 'Trip', icon: Briefcase }, { name: 'Home', icon: Home }, { name: 'Event', icon: Users }, { name: 'Other', icon: Coffee }].map((type) => {
+                           const Icon = type.icon;
+                           return (
+                            <button
+                              key={type.name}
+                              onClick={() => { setGroupType(type.name); setDrop(false); }}
+                              className={`flex items-center gap-3 p-3 rounded-xl transition-colors text-left ${
+                                lightMode ? 'hover:bg-purple-50 text-gray-700' : 'hover:bg-gray-700 text-gray-200'
+                              }`}
+                            >
+                              <div className={`p-2 rounded-lg ${lightMode ? 'bg-purple-100 text-purple-600' : 'bg-gray-700 text-purple-400'}`}>
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <span className="font-medium">{type.name}</span>
+                            </button>
+                           )
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          ))}
+
+            <div className={`h-px w-full ${lightMode ? 'bg-gray-200' : 'bg-gray-800'}`} />
+
+            {/* Members Section */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className={`text-xl font-bold ${lightMode ? 'text-gray-900' : 'text-white'}`}>Group Members</h3>
+                  <p className={`text-sm ${lightMode ? 'text-gray-500' : 'text-gray-400'}`}>Manage friends and their split percentage.</p>
+                </div>
+                <button
+                  onClick={handleAdd}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95 ${
+                    lightMode 
+                      ? 'bg-purple-100 text-purple-700 hover:bg-purple-200' 
+                      : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30'
+                  }`}
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Member
+                </button>
+              </div>
+
+              {/* Members List */}
+              <div className="space-y-3">
+                {members.map((m, index) => (
+                  <div 
+                    key={index} 
+                    className={`group relative grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-3 rounded-2xl border transition-all duration-200 ${
+                      lightMode 
+                        ? 'bg-white border-gray-100 hover:border-purple-200 hover:shadow-md' 
+                        : 'bg-gray-800/30 border-gray-800 hover:border-gray-600'
+                    }`}
+                  >
+                    {/* Index Number */}
+                    <div className="hidden md:flex col-span-1 justify-center">
+                        <span className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold ${
+                            lightMode ? 'bg-gray-100 text-gray-500' : 'bg-gray-700 text-gray-400'
+                        }`}>
+                            {index + 1}
+                        </span>
+                    </div>
+
+                    {/* Email Input */}
+                    <div className="col-span-1 md:col-span-7 relative">
+                      <Mail className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${lightMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                      <input
+                        type="email"
+                        name="email"
+                        value={m.email}
+                        placeholder="friend@email.com"
+                        onChange={(e) => handleChangee(e, index)}
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl outline-none bg-transparent font-medium ${
+                          lightMode 
+                            ? 'text-gray-800 placeholder-gray-400 focus:bg-gray-50' 
+                            : 'text-white placeholder-gray-500 focus:bg-gray-700/50'
+                        }`}
+                      />
+                    </div>
+
+                    {/* Share Input */}
+                    <div className="col-span-1 md:col-span-3 flex items-center gap-2 bg-transparent">
+                      <div className={`relative flex-1 flex items-center rounded-xl overflow-hidden border ${
+                        lightMode ? 'bg-gray-50 border-gray-200' : 'bg-gray-900/50 border-gray-700'
+                      }`}>
+                         <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={m.share}
+                          onChange={(e) => handleChangeInShare(index, e)}
+                          className={`w-full pl-3 pr-8 py-2.5 bg-transparent outline-none text-center font-bold ${
+                            lightMode ? 'text-gray-900' : 'text-white'
+                          }`}
+                        />
+                        <div className="absolute right-3 pointer-events-none text-gray-400 text-xs font-bold">%</div>
+                      </div>
+                    </div>
+
+                    {/* Delete Button */}
+                    <div className="col-span-1 flex justify-end md:justify-center">
+                      {members.length > 1 && (
+                        <button
+                          onClick={() => handleRemove(index)}
+                          className={`p-2.5 rounded-xl transition-all ${
+                            lightMode 
+                              ? 'text-gray-400 hover:bg-rose-50 hover:text-rose-600' 
+                              : 'text-gray-500 hover:bg-rose-900/20 hover:text-rose-400'
+                          }`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Total Stats Bar */}
+              <div className={`flex flex-col sm:flex-row items-center justify-between p-4 rounded-2xl border-2 transition-colors duration-300 ${
+                  total === 100 
+                    ? (lightMode ? 'bg-emerald-50 border-emerald-100 text-emerald-800' : 'bg-emerald-900/10 border-emerald-500/20 text-emerald-400')
+                    : total > 100 
+                    ? (lightMode ? 'bg-rose-50 border-rose-100 text-rose-800' : 'bg-rose-900/10 border-rose-500/20 text-rose-400')
+                    : (lightMode ? 'bg-orange-50 border-orange-100 text-orange-800' : 'bg-orange-900/10 border-orange-500/20 text-orange-400')
+              }`}>
+                <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-full ${
+                         total === 100 ? 'bg-emerald-200/50' : total > 100 ? 'bg-rose-200/50' : 'bg-orange-200/50'
+                    }`}>
+                        <PieChart className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <p className="text-xs font-bold uppercase opacity-70">Total Allocation</p>
+                        <p className="text-xl font-black">{total}%</p>
+                    </div>
+                </div>
+                
+                <div className={`mt-2 sm:mt-0 px-4 py-1.5 rounded-full text-sm font-bold ${
+                    total === 100 
+                        ? (lightMode ? 'bg-emerald-100' : 'bg-emerald-500/20') 
+                        : total > 100 
+                        ? (lightMode ? 'bg-rose-100' : 'bg-rose-500/20')
+                        : (lightMode ? 'bg-orange-100' : 'bg-orange-500/20')
+                }`}>
+                     {100 - total >= 0 ? `Remaining to split: ${100 - total}%` : `Oversplit by: ${Math.abs(100 - total)}%`}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-4">
+              <button
+                onClick={handleSave}
+                disabled={saving || total !== 100}
+                className={`w-full relative group overflow-hidden rounded-2xl p-4 transition-all duration-300 transform active:scale-[0.99] ${
+                    saving || total !== 100 
+                        ? 'cursor-not-allowed opacity-50 grayscale' 
+                        : 'hover:shadow-xl hover:shadow-purple-500/20'
+                }`}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-r ${
+                    lightMode 
+                    ? 'from-purple-600 to-cyan-500' 
+                    : 'from-purple-600 to-cyan-600'
+                } transition-transform duration-300 group-hover:scale-105`} />
+                
+                <div className="relative flex items-center justify-center gap-2 text-white font-bold text-lg">
+                  {saving ? (
+                    <>
+                        <RefreshCw className="w-5 h-5 animate-spin" />
+                        <span>Creating Group...</span>
+                    </>
+                  ) : (
+                    <>
+                        <Check className="w-6 h-6" />
+                        <span>Create Group</span>
+                    </>
+                  )}
+                </div>
+              </button>
+            </div>
+
+          </div>
+        </div>
+        
+        {/* Footer Credit / Style */}
+        <div className={`text-center mt-8 text-sm ${lightMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <p>Ready to split expenses? Ensure total equals 100%.</p>
         </div>
 
-        {/* Total Summary - Sleek & Clean */}
-        <div className={`flex justify-between items-center px-4 py-2 rounded-lg mt-2 transition-all duration-300 border-2 ${
-            total === 100 
-              ? (lightMode ? 'bg-green-50 border-green-300' : 'bg-green-900/20 border-green-500/30')
-              : total > 100 
-              ? (lightMode ? 'bg-red-50 border-red-300' : 'bg-red-900/20 border-red-500/30')
-              : (lightMode ? 'bg-slate-100 border-slate-200' : 'bg-slate-700/50 border-slate-600')
-          }`}>
-          <div className={`font-bold text-md ${
-            total === 100 ? (lightMode ? 'text-green-700' : 'text-green-400') :
-            total > 100 ? (lightMode ? 'text-red-700' : 'text-red-400') :
-            (lightMode ? 'text-slate-600' : 'text-slate-300')
-          }`}>
-            Total: <span className="text-lg">{total}%</span>
-          </div>
-          <div className={`font-medium text-sm ${
-            100 - total === 0 ? (lightMode ? 'text-green-600' : 'text-green-400') : 
-            100 - total < 0 ? (lightMode ? 'text-red-600' : 'text-red-400') : 
-            (lightMode ? 'text-orange-600' : 'text-orange-400')
-          }`}>
-            {100 - total >= 0 ? `Remaining: ${100 - total}%` : `Over by: ${Math.abs(100 - total)}%`}
-          </div>
-        </div>
-      </div>
-
-      {/* Submit Button */}
-      <div className="mt-8 ">
-        <button
-          className={`w-full !rounded-sm  py-3 px-6  ${
-            lightMode 
-              ? 'bg-teal-400 hover:shadow-lg' 
-              : 'bg-teal-400 hover:shadow-lg'
-          } text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
-          onClick={handleSave}
-          disabled={saving || total !== 100}
-        >
-          <span className="flex items-center justify-center gap-3">
-            {saving ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin"></div>
-                Creating Group...
-              </>
-            ) : (
-              <>
-                <Plus className="w-6 h-6" />
-                Create Group ({members.length} Members)
-              </>
-            )}
-          </span>
-        </button>
       </div>
     </div>
-  </div>
-</div>
   );
 }
